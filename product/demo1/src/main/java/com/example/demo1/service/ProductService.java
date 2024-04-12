@@ -3,6 +3,10 @@ package com.example.demo1.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.example.demo1.model.Product;
@@ -47,5 +51,48 @@ public boolean deleteProduct(int id)
             mr.deleteById(id);
             return true;
         }
+        public List<Product> sort(String productCategory) {
+            Sort sort = Sort.by(Sort.Direction.ASC, productCategory);
+            return mr.findAll(sort);
+        }
+        
+        //pagination
+        public List<Product> page(int pageSize, int pageNumber) {
+            Pageable page = PageRequest.of(pageNumber, pageSize);
+            return mr.findAll(page).getContent();
+        }
+        
+        //sorting and pagination
+        public List<Product> getsort(int pageNumber, int pageSize, String productCategory) {
+            return mr.findAll(PageRequest.of(pageNumber, pageSize)
+                    .withSort(Sort.by(Sort.Direction.ASC, productCategory))).getContent();
+        }
+        
+        public Product findByName(Integer productId) {
+            return mr.findByName(productId);
+        }
+    }
+        /*  
+        SORTING
+        public List<Product> sort(String field)
+        {
+            Sort sort=Sort.by(Sort.Direction.ASC,field);
+            return mr.findAll(sort);
+        }
+        
+        PAGINATION
+           public List<Product> page(int pageSize,int pageNumber)
+       {
+             Pageable page=PageRequest.of(pageNumber, pageSize);
+             return mr.findAll(page).getContent();
+        }
+        
+        PAGINATION AND SORTING
+        public List<Product> getsort(int pageNumber,int pageSize,String field)
+        {          
+            return mr.findAll(PageRequest.of(pageNumber, pageSize)
+            .withSort(Sort.by(Sort.Direction.ASC,field))).getContent();
+        }
 
-}
+        */
+

@@ -1,7 +1,12 @@
 package com.example.demo1.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Product {
@@ -76,5 +81,14 @@ public class Product {
     public Product() {
     }
    
-    
+    @OneToOne(mappedBy = "product",cascade = CascadeType.ALL)
+    @JoinColumn(name="fk_add_id")
+    @JsonManagedReference
+    Payment payment;//obj of secondary table
+    public Payment getPayment() {
+        return payment;
+    }
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+    }
 }

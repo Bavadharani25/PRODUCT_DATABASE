@@ -33,9 +33,9 @@ public class ProductController {
         return new ResponseEntity<>(ms.getAll(),HttpStatus.OK);
     }
     @GetMapping("/api/product/{productId}")
-    public ResponseEntity<Product> getById(@PathVariable Integer medicineId)
+    public ResponseEntity<Product> getById(@PathVariable Integer productId)
     {
-        Product obj=ms.getMe(medicineId);
+        Product obj=ms.getMe(productId);
         return new ResponseEntity<>(obj,HttpStatus.OK);
     }
     @PutMapping("/api/product/{productId}")
@@ -56,4 +56,73 @@ public class ProductController {
         }
         return new ResponseEntity<>(false,HttpStatus.NOT_FOUND);
     }
+    @GetMapping("/api/product/sortBy/{productCategory}")
+    public List<Product> g(@PathVariable String productCategory)
+    {
+        return ms.sort(productCategory);
+    }
+
+     //pagination
+     @GetMapping("/api/page/{offset}/{pagesize}")
+     public ResponseEntity <List<Product>> get(@PathVariable int offset,@PathVariable int pagesize)
+     {
+         try{
+             return new ResponseEntity<>(ms.page(offset,pagesize),HttpStatus.OK);
+          }
+          catch(Exception e)
+          {
+              return new ResponseEntity<>(ms.page(offset,pagesize),HttpStatus.NOT_FOUND);
+          }
+     }
+
+     
+    //sorting and pagination
+    @GetMapping("/api/{offset}/{pagesize}/{productCategory}")
+    public ResponseEntity<List<Product>> getsorting(@PathVariable int offset,@PathVariable int pagesize,@PathVariable String productCategory)
+    {
+        try{
+            return new ResponseEntity<>(ms.getsort(offset,pagesize,productCategory),HttpStatus.OK);
+         }
+         catch(Exception e)
+         {
+             return new ResponseEntity<>(ms.getsort(offset,pagesize,productCategory),HttpStatus.NOT_FOUND);
+         }
+    }
+
+    @GetMapping("/query/{productId}")
+    public ResponseEntity<Product> findByName(@PathVariable Integer productId) 
+    {
+        Product sh = ms.findByName(productId);
+        try{
+            return new ResponseEntity<>(sh,HttpStatus.OK);
+        }
+        catch(Exception e)
+        {
+            return new ResponseEntity<>(sh,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 }
+}
+
+    /*
+    SORTING
+    @GetMapping("/api/product/sortBy/{field}")
+    public List<Product> s(@PathVariable String field)
+    {
+        return ms.sort(field);
+    }
+     
+    PAGINATION
+   @GetMapping("/api/product/{offset}/{pagesize}")
+    public List<Product> get(@PathVariable int offset,@PathVariable int pagesize)
+    {
+        return ms.page(pagesize, offset);
+    }
+     PAGINATION AND SORTING
+    @GetMapping("/api/Product/{offset}/{pagesize}/{field}")
+    public List<Product> getsorting(@PathVariable int offset,@PathVariable int pagesize,@PathVariable String field)
+    {
+        return ms.getsort(offset,pagesize,field);
+    }
+
+    */
+
